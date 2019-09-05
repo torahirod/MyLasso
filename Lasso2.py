@@ -4,7 +4,7 @@ import numpy as np
 df = pd.read_csv("https://raw.githubusercontent.com/satopirka/Lasso/master/Boston.csv")
 y = df.iloc[:,-1]
 df = (df - df.mean())/df.std()
-X = df.iloc[:,:-1]
+X = df.iloc[:,1:-1]
 X = np.column_stack((np.ones(len(X)),X))
 
 n = X.shape[0]
