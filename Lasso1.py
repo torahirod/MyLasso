@@ -1,14 +1,17 @@
 import pandas as pd
 import numpy as np
 
-df = pd.read_csv("https://raw.githubusercontent.com/satopirka/Lasso/master/Boston.csv")
+# Bostonデータセットを読み込み
+from sklearn.datasets import load_boston
+boston = load_boston()
+df = pd.DataFrame(boston.data, columns=boston.feature_names).assign(MEDV=boston.target)
 
 # 目的変数を抽出 ※ 目的変数は標準化前に抽出している点に注意
 y = df.iloc[:,-1]
 # データの標準化
 df = (df - df.mean())/df.std()
-# 説明変数を抽出 ※ 1列目はただの行番号なので無視
-X = df.iloc[:,1:-1]
+# 説明変数を抽出
+X = df.iloc[:,:-1]
 # Xにバイアス（w0）用の値が1のダミー列を追加
 X = np.column_stack((np.ones(len(X)),X))
 
@@ -43,7 +46,8 @@ print(w[1:]) # 重み
 
 import sklearn.linear_model as lm
 lasso = lm.Lasso(alpha=1.0, max_iter=1000, tol=0.0)
-lasso.fit(X, y)
+# MyLasso用に1列目にバイアスを追加しているため、それを除いてfitさせる
+lasso.fit(X[:,1:], y)
 print("---------- sklearn Lasso ------------")
-print(model.intercept_)
-print(model.coef_)
+print(lasso.intercept_)
+print(lasso.coef_)

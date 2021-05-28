@@ -1,10 +1,13 @@
 import pandas as pd
 import numpy as np
+from sklearn.datasets import load_boston
 
-df = pd.read_csv("https://raw.githubusercontent.com/satopirka/Lasso/master/Boston.csv")
+boston = load_boston()
+df = pd.DataFrame(boston.data, columns=boston.feature_names).assign(MEDV=boston.target)
+
 y = df.iloc[:,-1]
 df = (df - df.mean())/df.std()
-X = df.iloc[:,1:-1]
+X = df.iloc[:,:-1]
 X = np.column_stack((np.ones(len(X)),X))
 
 n = X.shape[0]
